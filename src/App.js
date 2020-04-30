@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Route, Redirect} from 'react-router-dom';
+import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,6 +11,16 @@ import MovieComponent from './components/MovieComponent';
 import HomeComponent from './components/HomeComponent';
 
 
+const PageError = () => {
+
+  return (
+      <div class="alert alert-warning" role="alert">
+        <h1>Warning Page</h1>
+        <p>Please, I should contact to administrator.... </p>
+      </div>
+  )
+}
+
 const App = () => {
 
   return (
@@ -18,9 +28,12 @@ const App = () => {
         <BrowserRouter>
         <HeaderComponent title='My page' />
         <div className='container mt-3'>
-          <Route exact path="/home" component={HomeComponent} />
-          <Route path="/movie" component={MovieComponent} />
-          <Redirect from='/' to='/home' />
+          <Switch>
+            <Redirect exact from='/' to='/home' />
+            <Route exact path="/home" component={HomeComponent} />
+            <Route path="/movie" component={MovieComponent} />
+            <Route path="/**" component={PageError} />
+          </Switch>
         </div>
         <FooterComponent />
         </BrowserRouter>

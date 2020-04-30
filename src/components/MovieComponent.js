@@ -31,24 +31,30 @@ class MovieComponent extends Component {
         show: false
       }
     
-      handleSubmit = (event) => {
+      handleSubmit = async (event) => {
         event.preventDefault()
         const title = event.target[0].value
         const url = END_POINT.API_MOVIE;
-    
+        let flagEmpty = false;
+
         if(title !== ''){
-          fetch(url + '&t=' + title)
-            .then(res => res.json())
-            .then((movie) => this.setState({ movie, show: true }) )
-            .catch(error => {
-                console.log(ERRORS.CONEXION_ERROR);
-            })
+          try {
+            const response = await fetch(url + '&t=' + title)
+            const movie = await response.json();
+            if(movie.Response === 'True'){
+              this.setState({ movie, show: true })
+            }else{
+              flagEmpty = true;
+            }
+            
+          } catch (error) {
+            console.log(ERRORS.CONEXION_ERROR, error);
+          }
         }
-        else{
+        
+        if(flagEmpty){
           this.setState({ movie: {}, show: false })
         }
-    
-    
       }
     
       render () {
